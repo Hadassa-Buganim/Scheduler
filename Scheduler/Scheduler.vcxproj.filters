@@ -24,12 +24,30 @@
     <ClCompile Include="task.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RealTimeTask.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueNode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RealTimeTaskQueue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rb_tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RealTimeTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RealTimeTaskQueue .h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueueNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
