@@ -483,7 +483,14 @@ FodyWeavers.xsd
 .vs/Scheduler/v17/Browse.VC.db
 Scheduler/Scheduler.vcxproj
 Scheduler/Scheduler.vcxproj.filters
-
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.ipch
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
