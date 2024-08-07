@@ -26,4 +26,10 @@ struct queue_node* pop_task_node(struct real_time_task_queue* real_time_task_que
     }
     return queue_node;
 }
+int is_queue_empty(struct real_time_task_queue* real_time_task_queue) {
+    if (!real_time_task_queue->front)
+        return 1;
+    return 0;
+}
+
 

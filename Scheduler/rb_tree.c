@@ -11,10 +11,10 @@ rb_tree* initial_rb_tree() {
 }
 
 //insert task to the rb_tree
-void insert_task(rb_tree* tree, task* task) {
+void rb_tree_task_arrival(rb_tree* tree, task* task) {
 
 	if (task == NULL) {
-		//how will the wrrors be handled?
+		//how will the errors be handled?
 	}
 
 	if (tree == NULL) {
@@ -32,15 +32,15 @@ void insert_task(rb_tree* tree, task* task) {
 	}
 	node->color = RED;
 	node->left = node->right = node->parent = NULL;
+	node->task = task;
 
 	//TODO lock the tree
 
 	//if the tree is empty, 
 	if (tree->root == NULL) {
 		task->vruntime = 0;
-		node->task = task;
 		node->color = BLACK;
-		tree->most_left = node;
+		tree->root = tree->most_left = node;
 	}
 	else {
 		//the tree is not empty
@@ -48,7 +48,7 @@ void insert_task(rb_tree* tree, task* task) {
 		task->vruntime = tree->most_left->task->vruntime + 1;
 
 		//insert the node to the tree
-		add_node(tree->root, node);
+		add_node_to_tree(tree->root, node);
 
 		//check the colors
 		if (node->parent->color == RED) {
@@ -56,20 +56,22 @@ void insert_task(rb_tree* tree, task* task) {
 			//check uncle's color
 			if (node->parent->left == node) {
 				//node is a left child
-				if (node->parent->right->color == RED) {
-
+				if (node->parent->right != NULL && node->parent->right->color == RED) {
+					change_colors_hierarchical(tree, node);
 				}
 				else {
 					//rotate the tree
+					rotate_tree(tree, node);
 				}
 			}
 			else {
 				//node is a right child
-				if (node->parent->left->color == BLACK) {
-
+				if (node->parent->left != NULL && node->parent->left->color == RED) {
+					change_colors_hierarchical(tree, node);
 				}
 				else {
 					//rotate the tree
+					rotate_tree(tree, node);
 				}
 			}
 		}
@@ -77,7 +79,7 @@ void insert_task(rb_tree* tree, task* task) {
 	}
 }
 
-void add_node(rb_node* root, rb_node* node) {
+void add_node_to_tree(rb_node* root, rb_node* node) {
 
 	if (root == NULL)
 		return;
@@ -86,7 +88,7 @@ void add_node(rb_node* root, rb_node* node) {
 	if (root->task->vruntime > node->task->vruntime) {
 
 		if (root->left != NULL) {
-			add_node(root->left, node);
+			add_node_to_tree(root->left, node);
 		}
 		else {
 			root->left = node;
@@ -96,7 +98,7 @@ void add_node(rb_node* root, rb_node* node) {
 	else {
 		//the node is bigger;
 		if (root->right != NULL) {
-			add_node(root->right, node);
+			add_node_to_tree(root->right, node);
 		}
 		else {
 			root->right = node;
@@ -107,52 +109,84 @@ void add_node(rb_node* root, rb_node* node) {
 
 }
 
-void check_and_changes_colors(rb_node* node) {
+void rotate_tree(rb_tree* tree, rb_node* current) {
 
 	//TODO adding validators of not null nodes
 
-	rb_node* node_parent = node->parent;
-	if (node_parent->parent == NULL) {
+	rb_node* node_parent = current->parent;
+	rb_node* grandfather = node_parent->parent;
+	if (grandfather == NULL) {
 		//node_parent is a root
 		//it is forced the node_parent color is black - so this condition never be true
+		return;//??
 	}
 
-	rb_node* grandfather = node_parent->parent;
-
 	//if node_parent is a left child
-	if (grandfather->left == node_parent) {
+	else if (grandfather->left == node_parent) {
 
-		//if uncle's node is a red node
-		if (grandfather->right->color == RED) {
-			change_colors_to_black(grandfather);
+		//if there is no uncle
+		if (grandfather->right == NULL) {
+
+			if (node_parent->left == current) {
+				//node is a left child
+				right_rotation(tree, current->parent);
+				change_colors_after_rotation(current->parent);
+			}
+			else {
+				//node is a right child
+				left_right_rotation(tree, current);
+			}
+		}
+		else if (grandfather->right->color == RED) {
+			//uncle's node is a red node
+			change_colors_hierarchical(tree, grandfather);
 		}
 		else {
 			//need to rotate the tree.
 
 			//if node is a left child
-			if (node_parent->left == node) {
+			if (node_parent->left == current) {
 				//left left rotation (LL)
+				right_rotation(tree, current->parent);
+				change_colors_after_rotation(current->parent);
 			}
 			else {
 				//left right rotation (LR)
+				left_right_rotation(tree, current);
 			}
 		}
 	}
 	else {
 		//node_parent is a right child
 
-		//if uncle's node is a red node
-		if (grandfather->left->color == RED) {
-			change_colors_to_black(grandfather);
+		//if there is no uncle
+		if (grandfather->left == NULL) {
+			if (node_parent->right == current) {
+				//node is a right child
+				left_rotation(tree, current->parent);
+				change_colors_after_rotation(current->parent);
+			}
+			else {
+				//node is a left child
+				right_left_rotation(tree, current);
+			}
+		}
+		//checks the uncle's color
+		else if (grandfather->left->color == RED) {
+			//uncle's node is a red node
+			change_colors_hierarchical(tree, grandfather);
 		}
 		else {
 			//need to rotate
 			//if node is a left child
-			if (node_parent->left == node) {
+			if (node_parent->left == current) {
 				//right left rotation (RL)
+				right_left_rotation(tree, current);
 			}
 			else {
-				//right right rotation (RR)
+				//left rotation (RR)
+				left_rotation(tree, current->parent);
+				change_colors_after_rotation(current->parent);
 			}
 		}
 	}
@@ -160,69 +194,107 @@ void check_and_changes_colors(rb_node* node) {
 
 }
 
-void change_colors_to_black(rb_node* grandfather) {
+void change_colors_hierarchical(rb_tree* tree, rb_node* grandfather) {
 
 	grandfather->left->color = grandfather->right->color = BLACK;
 
 	if (grandfather->parent != NULL && grandfather->parent->color == RED) {
-		check_and_changes_colors(grandfather);
+		rotate_tree(tree, grandfather);
 	}
 }
 
 //rotation
 // left right rotation
-void left_right_rotation(rb_node* node) {
+void left_right_rotation(rb_tree* tree, rb_node* node) {
 
-	left_rotation(node);
-	right_rotation(node);
+	left_rotation(tree, node);
+	right_rotation(tree, node);
+	change_colors_after_rotation(node);
 }
 
-void left_left_rotation(rb_node* node) {
+void right_left_rotation(rb_tree* tree, rb_node* node) {
 
-	right_rotation(node);
-	right_rotation(node);
+	right_rotation(tree, node);
+	left_rotation(tree, node);
+	change_colors_after_rotation(node);
 }
 
-void right_left_rotation(rb_node* node) {
+void left_rotation(rb_tree* tree, rb_node* node) {
 
-	right_rotation(node);
-	left_rotation(node);
-}
+	rb_node* left = node->left;
+	if (left != NULL)
+		left->parent = node->parent;
+	node->parent->right = left;
 
-void right_right_rotation(rb_node* node) {
+	//checking if the node's parent is not the root
+	if (node->parent != tree->root) {
+		if (node->parent->parent->left == node->parent) {
+			node->parent->parent->left = node;
+		}
+		else {
+			node->parent->parent->right = node;
+		}
+	}
+	else {
+		tree->root = node;
+	}
 
-	left_rotation(node);
-	left_rotation(node);
-}
-
-void left_rotation(rb_node* node) {
-	rb_node* grandfather = node->parent->parent;
-	int is_parent_left = grandfather->left == node->parent;
-	node->parent->parent = node;
-	node->parent->right = node->left;
-	node->parent->right->parent = node->parent;
 	node->left = node->parent;
-	node->left->parent = node;//check it
-	node->parent = grandfather;
-	if (is_parent_left)
-		grandfather->left = node;
-	else
-		grandfather->right = node;
+	node->parent = node->parent->parent;
+	node->left->parent = node;
 }
 
-void right_rotation(rb_node* node) {
+void right_rotation(rb_tree* tree, rb_node* node) {
 
-	rb_node* grandfather = node->parent->parent;
-	int is_parent_left = grandfather->left == node->parent;
-	node->parent->parent = node;
-	node->parent->left = node->right;
-	node->right->parent = node->parent;
+	rb_node* right = node->right;
+	if (right != NULL)
+		right->parent = node->parent;
+	node->parent->left = right;
+
+	//checking if the node's parent is not the root
+	if (node->parent != tree->root) {
+		if (node->parent->parent->left == node->parent) {
+			node->parent->parent->left = node;
+		}
+		else {
+			node->parent->parent->right = node;
+		}
+	}
+	else {
+		tree->root = node;
+	}
+
 	node->right = node->parent;
+	node->parent = node->parent->parent;
 	node->right->parent = node;
-	node->parent = grandfather;
-	if (is_parent_left)
-		grandfather->left = node;
-	else
-		grandfather->right = node;
+}
+
+void change_colors_after_rotation(rb_node* node) {
+	node->color = BLACK;
+	if (node->left)
+		node->left->color = RED;
+	if (node->right)
+		node->right->color = RED;
 }
 //remvoe task from the rb_tree
+
+//free tree
+void free_struct_rb_tree(rb_tree* tree) {
+
+	free_rb_tree(tree->root);
+	tree->root = NULL;
+	tree->most_left = NULL;
+	tree->num_of_tasks = tree->total_weights = 0;
+}
+
+void free_rb_tree(rb_node* node) {
+
+	if (node == NULL)
+		return;
+
+	rb_node* temp = node;
+	free_rb_tree(node->left);
+	free_rb_tree(node->right);
+	free_task(temp->task);
+	free(temp);
+}

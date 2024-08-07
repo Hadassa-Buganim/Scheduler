@@ -12,3 +12,5 @@ struct real_time_task_queue {
 
 void push_task_node(struct real_time_task_queue* real_time_task_queue, struct queue_node* real_time_node);
 struct queue_node* pop_task_node(struct real_time_task_queue* real_time_task_queue);
+int is_queue_empty(struct real_time_task_queue* real_time_task_queue);
+
