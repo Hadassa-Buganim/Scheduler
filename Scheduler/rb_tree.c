@@ -295,5 +295,6 @@ void free_rb_tree(rb_node* node) {
 	rb_node* temp = node;
 	free_rb_tree(node->left);
 	free_rb_tree(node->right);
+	free_task(temp->task);
 	free(temp);
 }
