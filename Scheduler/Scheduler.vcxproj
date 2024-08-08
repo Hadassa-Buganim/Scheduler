@@ -137,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueueNode.h" />
-    <ClInclude Include="rb_tree.h" />
     <ClInclude Include="RealTimeTask.h" />
     <ClInclude Include="RealTimeTaskQueue .h" />
     <ClInclude Include="cfs.h" />
