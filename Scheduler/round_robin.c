@@ -1,10 +1,10 @@
 #include "round_robin.h"
 
-void execute_queue(real_time_task_queue* queue) {
+void execute_queue(struct real_time_task_queue* queue) {
 
 	//must be a node in the queue
-	queue_node* node = pop_task_node(queue);
-	real_time_task* current_task = node->task;
+	struct queue_node* node = pop_task_node(queue);
+	struct real_time_task* current_task = node->task;
 
 	//calculate the current quantum
 	double quantum = SCHED_LATENCY * (current_task->weight / queue->total_weights);
