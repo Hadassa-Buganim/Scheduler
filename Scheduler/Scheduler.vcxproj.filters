@@ -24,7 +24,17 @@
     <ClCompile Include="task.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="RealTimeTask.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueNode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RealTimeTaskQueue.c">
+=======
     <ClCompile Include="cfs.c">
+>>>>>>> 7dff3c95672a497b15dd28728bfce9cecf18f68c
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="round_robin.c">
@@ -38,6 +48,15 @@
     <ClInclude Include="task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="RealTimeTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RealTimeTaskQueue .h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueueNode.h">
+=======
     <ClInclude Include="scheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +64,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="general_settings.h">
+>>>>>>> 7dff3c95672a497b15dd28728bfce9cecf18f68c
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="round_robin.h">
