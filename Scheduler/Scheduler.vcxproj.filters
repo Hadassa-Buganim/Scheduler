@@ -37,9 +37,6 @@
 >>>>>>> 7dff3c95672a497b15dd28728bfce9cecf18f68c
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="round_robin.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rb_tree.h">
@@ -65,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="general_settings.h">
 >>>>>>> 7dff3c95672a497b15dd28728bfce9cecf18f68c
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="round_robin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

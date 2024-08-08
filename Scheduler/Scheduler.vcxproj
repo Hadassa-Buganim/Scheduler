@@ -145,7 +145,6 @@
     <ClInclude Include="cfs.h" />
     <ClInclude Include="general_settings.h" />
     <ClInclude Include="rb_tree.h" />
-    <ClInclude Include="round_robin.h" />
     <ClInclude Include="scheduler.h" />
 
     <ClInclude Include="task.h" />
